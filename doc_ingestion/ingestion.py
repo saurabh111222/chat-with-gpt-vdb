@@ -28,7 +28,7 @@ def ingest_doc(PATH: str, SUBJECT: str) -> None:
 
     class_obj = get_schema(class_name=SUBJECT)
     embedding = OpenAIEmbeddings()
-    # client.schema.delete_all()
+    client.schema.delete_all()
 
     if client.schema.exists(SUBJECT):
         print(f"Data for class {SUBJECT} already exists")
@@ -48,7 +48,3 @@ def ingest_doc(PATH: str, SUBJECT: str) -> None:
             texts, embedding, metadatas=meta, client=client, by_text=False
         )
         print(f"Inserted {len(texts)} documents into db.")
-
-
-if __name__ == "__main__":
-    print("Initiating doc insertion...")
