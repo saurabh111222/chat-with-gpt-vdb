@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-
 load_dotenv()
 
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -13,20 +12,22 @@ from utils.vdb_connections import get_client
 
 
 def run_llm(QUERY: str, SUBJECT: str, CHAT_HISTORY: list((str, any)) = []) -> any:
-    # Ingest docuements
-    # PATH = (
-    #     r"E:\Langchain Tutorial\local-vector-store\current_affairs_iasbaba.pdf"
-    #     if SUBJECT == "Current_affairs"
-    #     else r"C:\Users\LENOVO\Downloads\bill_passed.pdf"
-    # )
-    similarity_score = ingest_doc(QUERY=QUERY, SUBJECT=SUBJECT)
+    #insert documents
+    # ingest_doc(QUERY=QUERY, SUBJECT=SUBJECT)
+
+    client = get_client()
+
+    #Calculating similarity score
+    vectorstore = Weaviate(client, f"{SUBJECT}", "content", attributes=["source"], embedding=OpenAIEmbeddings())
+    doc = vectorstore.similarity_search_with_score(query=QUERY, by_text=False)
+    similarity_score = doc[0][1]
+    print("page_content", dict(doc[0][0])['page_content'])
+    # similarity_score = 0
 
     # Retriving the vector store
-    client = get_client()
     embeddings = OpenAIEmbeddings()
     vector_store = Weaviate(client, SUBJECT, "content", embedding=embeddings)
 
-    # llm = ChatOpenAI(temperature=0.2, verbose=True)
     llm = OpenAI(temperature=0, verbose=True)
     qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=vector_store.as_retriever(), return_source_documents=True)
     qa = ConversationalRetrievalChain.from_llm(
