@@ -56,3 +56,7 @@ def get_schema(class_name:str):
             "vectorizer": "text2vec-openai"
         }
     return class_obj
+
+
+if __name__ == "__main__":
+    print('config')
