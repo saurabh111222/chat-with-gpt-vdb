@@ -6,9 +6,10 @@ load_dotenv()
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter, TextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
-
+import streamlit as st
 from langchain.vectorstores import Weaviate
 import weaviate
+
 
 def generate_unique_uuid():
     return str(uuid.uuid4())
