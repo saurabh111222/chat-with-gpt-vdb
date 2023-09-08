@@ -24,7 +24,6 @@ def run_llm(QUERY: str, SUBJECT: str, CHAT_HISTORY: list((str, any)) = []) -> an
     doc = vectorstore.similarity_search_with_score(query=QUERY, by_text=False)
     similarity_score = doc[0][1]
     print("page_content", dict(doc[0][0])['page_content'])
-    # similarity_score = 0
 
     # Retriving the vector store
     embeddings = OpenAIEmbeddings()
@@ -36,6 +35,7 @@ def run_llm(QUERY: str, SUBJECT: str, CHAT_HISTORY: list((str, any)) = []) -> an
         llm=llm, retriever=vector_store.as_retriever(), return_source_documents=True
     )
     # memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+    #calculate the token spent and cost
     with get_openai_callback() as cb:
         result = qa({"question": QUERY, "chat_history": CHAT_HISTORY})
         print(f'{cb}')
