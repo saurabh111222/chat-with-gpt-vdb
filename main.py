@@ -1,3 +1,10 @@
+"""
+1. Context1: Add agents a) serpapi to find the url b) rafilatura to extract the content
+2. Context2: Retrive the info from vectordb
+3. Create a custom prompt templet and augment context1 and context2 in it
+4. concepts from langchain doc bot, FastAPI and threading
+"""
+
 from dotenv import load_dotenv
 import streamlit as st
 from streamlit_chat import message
@@ -31,8 +38,8 @@ if "chat_answers_history" not in st.session_state:
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
 
-load_customer_chat_history_on_UI()
-
+if len(st.session_state["user_prompt_history"]) == 0:
+    load_customer_chat_history_on_UI()
 
 if prompt:
     with st.spinner('Processing query...'):        
